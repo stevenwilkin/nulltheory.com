@@ -1,18 +1,17 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
-	"io/ioutil"
-	"flag"
 )
 
 var (
 	port int
 )
-
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	var responseCode int
@@ -20,12 +19,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	// check for requested path under public/
 	pwd, _ := os.Getwd()
 	filename := path.Join(pwd, "public", r.URL.Path)
-	stat, err := os.Stat(filename); 
+	stat, err := os.Stat(filename)
 
 	// append index.html if path is a directory
 	if !os.IsNotExist(err) && stat.Mode().IsDir() {
 		filename = path.Join(filename, "index.html")
-		stat, err = os.Stat(filename); 
+		stat, err = os.Stat(filename)
 	}
 
 	if os.IsNotExist(err) {
