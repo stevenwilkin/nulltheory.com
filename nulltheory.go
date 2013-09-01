@@ -6,6 +6,11 @@ import (
 	"os"
 	"path"
 	"io/ioutil"
+	"flag"
+)
+
+var (
+	port int
 )
 
 
@@ -35,10 +40,15 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%s %s %d\n", r.Method, r.URL.Path, responseCode)
 }
 
+func init() {
+	flag.IntVar(&port, "p", 8080, "Port to listen on")
+	flag.Parse()
+}
+
 func main() {
-	fmt.Printf("> Starting on http://0.0.0.0:8080\n")
+	fmt.Printf("> Starting on http://0.0.0.0:%d\n", port)
 	http.HandleFunc("/", handler)
-	err := http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 	if err != nil {
 		fmt.Println("Error starting!")
 	}
