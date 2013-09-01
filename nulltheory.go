@@ -4,9 +4,11 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"mime"
 	"net/http"
 	"os"
 	"path"
+	"strings"
 )
 
 var (
@@ -31,6 +33,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		responseCode = http.StatusNotFound
 		w.WriteHeader(responseCode)
 	} else {
+		// set MIME type from file extension if possible
+		split := strings.Split(filename, ".")
+		extension := fmt.Sprintf(".%s", split[len(split)-1])
+		if mime := mime.TypeByExtension(extension); mime != "" {
+			w.Header().Set("Content-Type", mime)
+		}
+		// send the contents of the file
 		responseCode = http.StatusOK
 		contents, _ := ioutil.ReadFile(filename)
 		w.Write(contents)
