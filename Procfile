@@ -1,1 +1,1 @@
-web: nulltheory -p $PORT
+web: ./bin/nulltheory.com -p $PORT
